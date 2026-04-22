@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergency Alarm Button</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 500px;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    p {
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    button {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      background: #e53935;
+      color: white;
+      box-shadow: 0 0 30px rgba(229, 57, 53, 0.5);
+      transition: transform 0.15s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .stop {
+      margin-top: 25px;
+      width: auto;
+      height: auto;
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: #444;
+      font-size: 1rem;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Emergency Alarm</h1>
+    <p>Press the red button to trigger a loud alarm sound and alert nearby people.</p>
+
+    <button onclick="startAlarm()">HELP</button>
+    <br>
+    <button class="stop" onclick="stopAlarm()">Stop Alarm</button>
+  </div>
+
+  <audio id="alarmSound" loop>
+    <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
+  </audio>
+
+  <script>
+    const alarm = document.getElementById('alarmSound');
+
+    function startAlarm() {
+      alarm.currentTime = 0;
+      alarm.play();
+
+      if (navigator.vibrate) {
+        navigator.vibrate([500, 300, 500, 300, 1000]);
+      }
+    }
+
+    function stopAlarm() {
+      alarm.pause();
+      alarm.currentTime = 0;
+
+      if (navigator.vibrate) {
+        navigator.vibrate(0);
+      }
+    }
+  </script>
+</body>
+</html>
