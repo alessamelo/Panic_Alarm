@@ -7,10 +7,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>StudyOS</title>
+  <title>QuickSOS</title>
 
   <!-- INDEX PAGE CSS -->
   <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="global.css">
 </head>
 
 <body class="landing-page">
@@ -28,18 +29,25 @@
       tasks, focus sessions, and emergency safety.
     </p>
 
+    <!-- GLOBAL EMERGENCY TIMER DISPLAY -->
+    <div class="retro-timer" id="timerDisplay">
+      15:00
+    </div>
+
     <div class="menu-grid">
-      <a href="dashboard.html" class="pixel-btn">
+
+      <a href="Dashboard/dashboard.html" class="pixel-btn">
         Tasks
       </a>
 
-      <a href="pomodoro.html" class="pixel-btn">
+      <a href="Pomodoro/pomodoro.html" class="pixel-btn">
         Pomodoro
       </a>
 
-      <a href="emergency.html" class="pixel-btn danger-btn">
+      <a href="Emergency/emergency.html" class="pixel-btn danger-btn">
         Emergency
       </a>
+
     </div>
 
     <p class="footer-note">
@@ -47,6 +55,9 @@
     </p>
 
   </div>
+
+  <!-- GLOBAL EMERGENCY SYSTEM -->
+  <script src="Emergency/globaltimer.js"></script>
 
 </body>
 </html>

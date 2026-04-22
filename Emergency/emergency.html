@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>QuickSOS | Emergency Center</title>
+
+  <!-- Emergency page CSS -->
+  <link rel="stylesheet" href="emergency.css" />
+  <link rel="stylesheet" href="../global.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>QuickSOS ❤️</h1>
+
+    <p class="subtitle">
+      Configure your emergency contact and automatic WhatsApp alert system.
+    </p>
+
+    <!-- ===================================== -->
+    <!-- GLOBAL SAFETY BAR -->
+    <!-- ===================================== -->
+
+    <div class="global-safety-bar">
+
+      <!-- Global timer -->
+      <div class="retro-timer" id="timerDisplay">
+        15:00
+      </div>
+
+      <!-- Quick help button -->
+      <button
+        class="global-help-btn"
+        onclick="sendEmergencyMessage()"
+      >
+        HELP
+      </button>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- EMERGENCY CONTACT CONFIG -->
+    <!-- ===================================== -->
+
+    <section class="task-box">
+
+      <h2>Emergency WhatsApp Alert</h2>
+
+      <label class="switch-row">
+        <span>Enable Emergency Contact</span>
+
+        <input
+          type="checkbox"
+          id="enableEmergency"
+          onchange="toggleEmergencyFields()"
+        >
+      </label>
+
+      <div
+        id="emergencyFields"
+        style="display: none;"
+      >
+
+        <input
+          type="text"
+          id="contactName"
+          placeholder="Emergency contact name"
+        />
+
+        <input
+          type="text"
+          id="contactPhone"
+          placeholder="Phone number with country code (example: 593999999999)"
+        />
+
+        <textarea
+          id="emergencyMessage"
+          placeholder="Write the emergency message to send..."
+          rows="5"
+        ></textarea>
+
+        <button
+          class="pixel-btn"
+          onclick="saveEmergencyContact()"
+        >
+          Save Emergency Contact
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- ===================================== -->
+    <!-- SAVED CONTACT PREVIEW -->
+    <!-- ===================================== -->
+
+    <section class="task-box">
+
+      <h2>Saved Emergency Contact</h2>
+
+      <div id="savedPreview">
+        No emergency contact configured yet.
+      </div>
+
+      <br>
+
+      <div class="action-buttons">
+
+        <button
+          class="pixel-btn"
+          onclick="editEmergencyContact()"
+        >
+          Edit Contact
+        </button>
+
+        <button
+          class="pixel-btn"
+          onclick="deleteEmergencyContact()"
+        >
+          Delete Contact
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- ===================================== -->
+    <!-- MANUAL EMERGENCY TRIGGER -->
+    <!-- ===================================== -->
+
+    <section class="task-box">
+
+      <h2>Manual Emergency Trigger</h2>
+
+      <p class="button-note">
+        Press HELP to immediately open WhatsApp
+        and send your emergency message.
+      </p>
+
+      <button
+        class="panic-button"
+        onclick="sendEmergencyMessage()"
+      >
+        SEND HELP
+      </button>
+
+    </section>
+
+    <!-- ===================================== -->
+    <!-- BACK BUTTON -->
+    <!-- ===================================== -->
+
+    <a
+      href="../index.html"
+      class="pixel-btn"
+    >
+      Back
+    </a>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- JAVASCRIPT FILES -->
+  <!-- ===================================== -->
+
+  <!-- Global timer system -->
+  <script src="globaltimer.js"></script>
+
+  <!-- Emergency page logic -->
+  <script src="emergency.js"></script>
+
+</body>
+</html>

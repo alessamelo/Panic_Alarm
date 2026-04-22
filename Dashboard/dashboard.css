@@ -134,6 +134,48 @@ strong {
   color: #c23b72;
 }
 
+/* ===================================== */
+/* GLOBAL SAFETY BAR */
+/* ===================================== */
+
+.global-safety-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 35px;
+  flex-wrap: wrap;
+}
+
+.retro-timer {
+  background: #111;
+  color: #ff8ce8;
+  border: 4px solid #333;
+  padding: 18px 35px;
+  font-size: 38px;
+  font-family: "Courier New", monospace;
+  letter-spacing: 4px;
+  box-shadow: inset 0 0 15px rgba(140,255,140,0.12);
+}
+
+.global-help-btn {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 4px solid #d93c63;
+  background: #ff5b7f;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 0 6px #ffd5e3;
+  transition: 0.15s;
+}
+
+.global-help-btn:hover {
+  transform: scale(1.05);
+}
+
 /* RESPONSIVE */
 
 @media (max-width: 1100px) {

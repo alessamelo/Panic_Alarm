@@ -4,12 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tasks | StudyOS</title>
+
+  <!-- Dashboard CSS -->
   <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="../global.css">
 </head>
 <body>
 
   <div class="page-container">
+
     <h1>Daily Tasks + Subjects ✿</h1>
+
+    <!-- ===================================== -->
+    <!-- GLOBAL SAFETY BAR -->
+    <!-- ===================================== -->
+
+    <div class="global-safety-bar">
+
+      <!-- GLOBAL TIMER -->
+      <div class="retro-timer" id="timerDisplay">
+        15:00
+      </div>
+
+      <!-- GLOBAL HELP BUTTON -->
+      <button
+        class="global-help-btn"
+        onclick="manualEmergencyTrigger()"
+      >
+        HELP
+      </button>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- MAIN 3 COLUMNS -->
+    <!-- ===================================== -->
 
     <div class="three-columns">
 
@@ -82,10 +111,19 @@
 
     </div>
 
-    <a href="index.html" class="pixel-btn back-btn">
+    <!-- BACK BUTTON -->
+    <a href="../index.html" class="pixel-btn back-btn">
       Back
     </a>
+
   </div>
+
+  <!-- ===================================== -->
+  <!-- GLOBAL TIMER SYSTEM -->
+  <!-- because index is outside Dashboard folder -->
+  <!-- ===================================== -->
+
+  <script src="../Emergency/globaltimer.js"></script>
 
   <script>
     /*
@@ -129,7 +167,7 @@
 
     /*
     =====================================
-    DAILY TASKS WITH SAVED CHECKBOXES
+    DAILY TASKS
     =====================================
     */
 
@@ -235,7 +273,7 @@
 
     /*
     =====================================
-    UNIVERSITY TASKS WITH SAVED CHECKS
+    UNIVERSITY TASKS
     =====================================
     */
 
@@ -319,7 +357,7 @@
 
     /*
     =====================================
-    INVESTIGATION TASKS WITH SAVED CHECKS
+    INVESTIGATION TASKS
     =====================================
     */
 
