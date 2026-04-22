@@ -3,85 +3,218 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Emergency Alarm Button</title>
+  <title>QuickSOS - Safety Monitor</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
-      background: #111;
+      background: linear-gradient(180deg, #121212, #1b1b1b);
       color: white;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      padding: 20px;
       text-align: center;
     }
 
     .container {
-      max-width: 500px;
-      padding: 30px;
+      width: 100%;
+      max-width: 700px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
     }
 
     h1 {
-      margin-bottom: 20px;
-      font-size: 2rem;
+      margin: 0;
+      font-size: 2.2rem;
     }
 
-    p {
-      margin-bottom: 30px;
+    .subtitle {
+      margin-top: 12px;
+      margin-bottom: 28px;
       opacity: 0.9;
+      line-height: 1.6;
     }
 
-    button {
-      width: 220px;
-      height: 220px;
+    .retro-timer {
+      margin: 20px auto 30px;
+      width: fit-content;
+      padding: 18px 32px;
+      border-radius: 18px;
+      background: #050505;
+      border: 2px solid #2b2b2b;
+      font-family: "Courier New", monospace;
+      font-size: 3rem;
+      letter-spacing: 4px;
+      color: #7CFF7C;
+      box-shadow: inset 0 0 20px rgba(124,255,124,0.12);
+    }
+
+    .status-box {
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .panic-button {
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.7rem;
       font-weight: bold;
       cursor: pointer;
       background: #e53935;
       color: white;
-      box-shadow: 0 0 30px rgba(229, 57, 53, 0.5);
+      box-shadow: 0 0 40px rgba(229,57,53,0.45);
       transition: transform 0.15s ease;
     }
 
-    button:hover {
+    .panic-button:hover {
       transform: scale(1.05);
     }
 
-    .stop {
-      margin-top: 25px;
-      width: auto;
-      height: auto;
+    .button-note {
+      margin-top: 14px;
+      margin-bottom: 28px;
+      opacity: 0.85;
+    }
+
+    .secondary-btn {
+      border: none;
       padding: 14px 28px;
-      border-radius: 12px;
-      background: #444;
+      border-radius: 14px;
+      cursor: pointer;
       font-size: 1rem;
-      box-shadow: none;
+      margin: 8px;
+    }
+
+    .confirm {
+      background: #2e7d32;
+      color: white;
+    }
+
+    .stop {
+      background: #444;
+      color: white;
+    }
+
+    .future-box {
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      font-size: 0.95rem;
+      opacity: 0.95;
+    }
+
+    .future-box strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Emergency Alarm</h1>
-    <p>Press the red button to trigger a loud alarm sound and alert nearby people.</p>
+    <h1>QuickSOS</h1>
+    <p class="subtitle">
+      Personal safety monitor with inactivity check, wellness confirmation,
+      and emergency alarm activation.
+    </p>
 
-    <button onclick="startAlarm()">HELP</button>
-    <br>
-    <button class="stop" onclick="stopAlarm()">Stop Alarm</button>
+    <div class="retro-timer" id="timerDisplay">25:00</div>
+
+    <div class="status-box" id="statusMessage">
+      Monitoring active.<br>
+      If no confirmation is received after the soft reminder,
+      the emergency alarm will activate.
+    </div>
+
+    <button class="panic-button" onclick="startEmergencyAlarm()">
+      HELP
+    </button>
+
+    <p class="button-note">
+      Press immediately if you feel physically unwell.
+    </p>
+
+    <div>
+      <button class="secondary-btn confirm" onclick="confirmWellBeing()">
+        I'm OK
+      </button>
+
+      <button class="secondary-btn stop" onclick="stopAlarm()">
+        Stop Alarm
+      </button>
+    </div>
+
+    <div class="future-box">
+      <strong>Desktop Monitor (Windows)</strong>
+      Full system-wide monitoring for keyboard and activity detection
+      will be available in a future downloadable Windows version.
+      For now, this page includes timer monitoring and manual emergency alert.
+    </div>
   </div>
 
-  <audio id="alarmSound" loop>
+  <audio id="softAlarm">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+  </audio>
+
+  <audio id="realAlarm" loop>
     <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
   </audio>
 
   <script>
-    const alarm = document.getElementById('alarmSound');
+    let totalSeconds = 25 * 60;
+    let warningTriggered = false;
+    let finalAlarmTimeout;
 
-    function startAlarm() {
-      alarm.currentTime = 0;
-      alarm.play();
+    const timerDisplay = document.getElementById("timerDisplay");
+    const statusMessage = document.getElementById("statusMessage");
+    const softAlarm = document.getElementById("softAlarm");
+    const realAlarm = document.getElementById("realAlarm");
+
+    function updateTimerDisplay() {
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+    }
+
+    function startSoftCheck() {
+      if (warningTriggered) return;
+
+      warningTriggered = true;
+      softAlarm.play();
+
+      statusMessage.innerHTML = `
+        Gentle check-in 💛<br>
+        Are you okay? Please press <strong>I'm OK</strong> within 10 minutes.
+      `;
+
+      finalAlarmTimeout = setTimeout(() => {
+        startEmergencyAlarm();
+      }, 10 * 60 * 1000);
+    }
+
+    function startEmergencyAlarm() {
+      realAlarm.currentTime = 0;
+      realAlarm.play();
+
+      statusMessage.innerHTML = `
+        Emergency mode activated.<br>
+        Alarm is sounding. Please get help immediately.
+      `;
 
       if (navigator.vibrate) {
         navigator.vibrate([500, 300, 500, 300, 1000]);
@@ -89,13 +222,39 @@
     }
 
     function stopAlarm() {
-      alarm.pause();
-      alarm.currentTime = 0;
+      realAlarm.pause();
+      realAlarm.currentTime = 0;
 
       if (navigator.vibrate) {
         navigator.vibrate(0);
       }
     }
+
+    function confirmWellBeing() {
+      clearTimeout(finalAlarmTimeout);
+      stopAlarm();
+
+      totalSeconds = 25 * 60;
+      warningTriggered = false;
+      updateTimerDisplay();
+
+      statusMessage.innerHTML = `
+        Confirmation received ✅<br>
+        Timer reset. Monitoring active again.
+      `;
+    }
+
+    updateTimerDisplay();
+
+    setInterval(() => {
+      if (totalSeconds > 0 && !warningTriggered) {
+        totalSeconds--;
+        updateTimerDisplay();
+      } else if (totalSeconds === 0 && !warningTriggered) {
+        startSoftCheck();
+      }
+    }, 1000);
   </script>
 </body>
 </html>
+
