@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasks | StudyOS</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+
+  <div class="page-container">
+    <h1>Daily Tasks + Subjects ✿</h1>
+
+    <div class="three-columns">
+
+      <!-- COLUMN 1 : DAILY HOME TASKS -->
+      <section class="task-box">
+        <h2>Daily Home Tasks</h2>
+
+        <div id="dailyTasks">
+          <label><input type="checkbox"> Make breakfast</label>
+          <label><input type="checkbox"> Make bed</label>
+          <label><input type="checkbox"> Shower</label>
+          <label><input type="checkbox"> Morning skincare</label>
+          <label><input type="checkbox"> Morning makeup</label>
+          <label><input type="checkbox"> Lunch + Wash dishes</label>
+          <label><input type="checkbox"> Remove makeup</label>
+          <label><input type="checkbox"> Night skincare</label>
+          <label><input type="checkbox"> Dinner + Wash dishes</label>
+        </div>
+      </section>
+
+      <!-- COLUMN 2 : UNIVERSITY TASKS -->
+      <section class="task-box">
+        <h2>University Tasks</h2>
+
+        <input
+          type="text"
+          id="newSubjectInput"
+          placeholder="Add new subject..."
+        />
+
+        <button
+          class="pixel-btn"
+          onclick="addSubject()"
+        >
+          + Subject
+        </button>
+
+        <input
+          type="text"
+          id="universityTaskInput"
+          placeholder="Add university task..."
+        />
+
+        <select id="subjectSelect">
+          <option>Neural Networks</option>
+          <option>App Development</option>
+          <option>Theory of Computation</option>
+          <option>Software Engineering</option>
+          <option>Natural Language Processing</option>
+        </select>
+
+        <button
+          class="pixel-btn"
+          onclick="addUniversityTask()"
+        >
+          Add Task
+        </button>
+
+        <ul id="universityTaskList"></ul>
+      </section>
+
+      <!-- COLUMN 3 : INVESTIGATION TASKS -->
+      <section class="task-box">
+        <h2>Investigation Tasks</h2>
+
+        <input
+          type="text"
+          id="investigationTaskInput"
+          placeholder="Add investigation task..."
+        />
+
+        <select id="projectSelect">
+          <option>EEG Cage Prediction</option>
+          <option>DepaYT Research</option>
+        </select>
+
+        <button
+          class="pixel-btn"
+          onclick="addInvestigationTask()"
+        >
+          Add Task
+        </button>
+
+        <ul id="investigationTaskList"></ul>
+      </section>
+
+    </div>
+
+    <a href="index.html" class="pixel-btn back-btn">
+      Back
+    </a>
+  </div>
+
+  <script>
+    function addSubject() {
+      const input = document.getElementById("newSubjectInput");
+      const select = document.getElementById("subjectSelect");
+
+      const subjectName = input.value.trim();
+
+      if (subjectName === "") return;
+
+      const option = document.createElement("option");
+      option.value = subjectName;
+      option.textContent = subjectName;
+
+      select.appendChild(option);
+
+      input.value = "";
+    }
+
+    function addUniversityTask() {
+      const taskInput = document.getElementById("universityTaskInput");
+      const subjectSelect = document.getElementById("subjectSelect");
+      const taskList = document.getElementById("universityTaskList");
+
+      const taskName = taskInput.value.trim();
+      const selectedSubject = subjectSelect.value;
+
+      if (taskName === "") return;
+
+      const li = document.createElement("li");
+
+      li.innerHTML = `
+        <label>
+          <input type="checkbox">
+          <strong>[${selectedSubject}]</strong> ${taskName}
+        </label>
+      `;
+
+      taskList.appendChild(li);
+      taskInput.value = "";
+    }
+
+    function addInvestigationTask() {
+      const taskInput = document.getElementById("investigationTaskInput");
+      const projectSelect = document.getElementById("projectSelect");
+      const taskList = document.getElementById("investigationTaskList");
+
+      const taskName = taskInput.value.trim();
+      const selectedProject = projectSelect.value;
+
+      if (taskName === "") return;
+
+      const li = document.createElement("li");
+
+      li.innerHTML = `
+        <label>
+          <input type="checkbox">
+          <strong>[${selectedProject}]</strong> ${taskName}
+        </label>
+      `;
+
+      taskList.appendChild(li);
+      taskInput.value = "";
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Emergency | StudyOS</title>
+
+  <!-- Emergency page specific CSS -->
+  <link rel="stylesheet" href="emergency.css" />
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>QuickSOS ❤️</h1>
+
+    <p class="subtitle">
+      Personal safety monitor with inactivity check,
+      wellness confirmation, and emergency alarm activation.
+    </p>
+
+    <!-- RETRO TIMER -->
+    <div class="retro-timer" id="timerDisplay">
+      25:00
+    </div>
+
+    <!-- STATUS -->
+    <div class="status-box" id="statusMessage">
+      Monitoring active.<br>
+      If no confirmation is received after the soft reminder,
+      the emergency alarm will activate.
+    </div>
+
+    <!-- MAIN EMERGENCY BUTTON -->
+    <button
+      class="panic-button"
+      onclick="startEmergencyAlarm()"
+    >
+      HELP
+    </button>
+
+    <p class="button-note">
+      Press immediately if you feel physically unwell.
+    </p>
+
+    <!-- ACTION BUTTONS -->
+    <div>
+      <button
+        class="secondary-btn confirm"
+        onclick="confirmWellBeing()"
+      >
+        I'm OK
+      </button>
+
+      <button
+        class="secondary-btn stop"
+        onclick="stopAlarm()"
+      >
+        Stop Alarm
+      </button>
+    </div>
+
+    <!-- FUTURE WINDOWS APP -->
+    <div class="future-box">
+      <strong>Desktop Monitor (Windows)</strong>
+
+      Full system-wide monitoring for keyboard and
+      inactivity detection will be available in a
+      future downloadable Windows version.
+
+      For now, this page includes timer monitoring
+      and manual emergency alert.
+    </div>
+
+    <!-- BACK BUTTON -->
+    <br><br>
+
+    <a href="index.html" class="secondary-btn">
+      Back
+    </a>
+
+  </div>
+
+  <!-- SOFT REMINDER SOUND -->
+  <audio id="softAlarm">
+    <source
+      src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+      type="audio/ogg"
+    >
+  </audio>
+
+  <!-- REAL EMERGENCY ALARM -->
+  <audio id="realAlarm" loop>
+    <source
+      src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
+      type="audio/ogg"
+    >
+  </audio>
+
+  <script>
+    /*
+    =====================================
+    TIMER PERSISTENCE WITH LOCALSTORAGE
+    =====================================
+    This prevents reset when changing pages
+    */
+
+    let totalSeconds =
+      parseInt(localStorage.getItem("emergencyTimer")) || 25 * 60;
+
+    let warningTriggered = false;
+    let finalAlarmTimeout;
+
+    const timerDisplay = document.getElementById("timerDisplay");
+    const statusMessage = document.getElementById("statusMessage");
+    const softAlarm = document.getElementById("softAlarm");
+    const realAlarm = document.getElementById("realAlarm");
+
+    /*
+    =====================================
+    UPDATE TIMER DISPLAY
+    =====================================
+    */
+
+    function updateTimerDisplay() {
+      const minutes = String(
+        Math.floor(totalSeconds / 60)
+      ).padStart(2, "0");
+
+      const seconds = String(
+        totalSeconds % 60
+      ).padStart(2, "0");
+
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+    }
+
+    /*
+    =====================================
+    SOFT CHECK-IN
+    =====================================
+    */
+
+    function startSoftCheck() {
+      if (warningTriggered) return;
+
+      warningTriggered = true;
+
+      softAlarm.currentTime = 0;
+      softAlarm.play();
+
+      statusMessage.innerHTML = `
+        Gentle check-in 💛<br>
+        Are you okay?<br>
+        Please press <strong>I'm OK</strong>
+        within 10 minutes.
+      `;
+
+      finalAlarmTimeout = setTimeout(() => {
+        startEmergencyAlarm();
+      }, 10 * 60 * 1000);
+    }
+
+    /*
+    =====================================
+    REAL EMERGENCY MODE
+    =====================================
+    */
+
+    function startEmergencyAlarm() {
+      realAlarm.currentTime = 0;
+      realAlarm.play();
+
+      statusMessage.innerHTML = `
+        Emergency mode activated 🚨<br>
+        Alarm is sounding.<br>
+        Please get help immediately.
+      `;
+
+      if (navigator.vibrate) {
+        navigator.vibrate([
+          500, 300,
+          500, 300,
+          1000
+        ]);
+      }
+    }
+
+    /*
+    =====================================
+    STOP ALARM
+    =====================================
+    */
+
+    function stopAlarm() {
+      realAlarm.pause();
+      realAlarm.currentTime = 0;
+
+      if (navigator.vibrate) {
+        navigator.vibrate(0);
+      }
+    }
+
+    /*
+    =====================================
+    USER CONFIRMATION
+    =====================================
+    */
+
+    function confirmWellBeing() {
+      clearTimeout(finalAlarmTimeout);
+
+      stopAlarm();
+
+      /*
+      Reset timer after successful confirmation
+      */
+
+      totalSeconds = 25 * 60;
+      warningTriggered = false;
+
+      /*
+      Save reset value to localStorage
+      */
+
+      localStorage.setItem(
+        "emergencyTimer",
+        totalSeconds
+      );
+
+      updateTimerDisplay();
+
+      statusMessage.innerHTML = `
+        Confirmation received ✅<br>
+        Timer reset.<br>
+        Monitoring active again.
+      `;
+    }
+
+    /*
+    =====================================
+    AUTO TIMER LOOP
+    =====================================
+    */
+
+    updateTimerDisplay();
+
+    setInterval(() => {
+      if (
+        totalSeconds > 0 &&
+        !warningTriggered
+      ) {
+        totalSeconds--;
+
+        /*
+        Save current timer every second
+        */
+
+        localStorage.setItem(
+          "emergencyTimer",
+          totalSeconds
+        );
+
+        updateTimerDisplay();
+      }
+
+      else if (
+        totalSeconds === 0 &&
+        !warningTriggered
+      ) {
+        startSoftCheck();
+      }
+
+    }, 1000);
+  </script>
+
+</body>
+</html>
